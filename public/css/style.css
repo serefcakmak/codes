@@ -1,0 +1,1708 @@
+
+			<style>
+			
+			/* 📌 Filtre Konteyneri İçin Genişlik Optimizasyonu */
+			#filter-container {
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: space-between; /* İçeriği yan yana diz */
+				gap: 4px; /* Elemanlar arası boşluk */
+				padding: 5px 8px; /* İç boşluk */
+				max-width: 100%; /* Taşmayı önle */
+				overflow-x: hidden; /* Yatay kaydırmayı engelle */
+			}
+
+			/* 📌 Dropdown Menünün Boyutunu Optimize Et */
+			.selectpicker {
+				width: 100% !important; /* Bootstrap selectpicker'ın tam genişliği kaplamasını sağla */
+				max-width: 180px; /* Genişlik kontrolü */
+			}
+
+			/* 📌 Küçük Ekranlarda Uyumluluk */
+			@media (max-width: 768px) {
+				#filter-container {
+					flex-direction: column; /* Mobilde alt alta diz */
+					align-items: center;
+				}
+			}
+			.filter-dropdowns {
+				display: flex;
+				flex-wrap: wrap;
+				gap: 1px; /* Dropdownlar arası mesafe */
+				justify-content: space-between;
+				max-width: 220px; /* Filter container genişliğiyle sınırla */
+			}
+
+			.filter-dropdowns select {
+				width: 100% !important; /* Selectpicker genişliği tam olmalı */
+				max-width: 220px; /* En fazla filter-container kadar geniş olabilir */
+			}
+
+			/* Küçük ekranlarda daha iyi sığması için */
+			@media (max-width: 768px) {
+				.filter-dropdowns {
+					flex-direction: column;
+					align-items: center;
+				}
+				
+				.filter-dropdowns select {
+					max-width: 100%;
+				}
+			}
+
+			.filter-section {
+				background: #f9f9f9; /* Hafif gri arka plan */
+				border: 1px solid #ddd; /* İnce kenarlık */
+				padding: 2px;
+				margin-top: 1px; /* Filtre grupları arasındaki boşluk */
+				border-radius: 5px; /* Hafif köşe yuvarlama */
+				font-size: 14px;
+			}
+
+			.filter-section h10
+				margin: 0 0 0 0;
+				font-weight: normal;
+				
+				color: #333;
+			}
+
+			.filter-section label {
+				display: block; /* Checkboxları dikey hizalama */
+				margin: 1px 0;
+				
+			}
+
+			/* Koleksiyon Filtre Konteyneri */
+			.collection-filter-container {
+				background: #f8f9fa; /* Açık gri arka plan */
+				padding: 2px 2px;
+				border-radius: 5px;
+				border: 1px solid #ddd;
+				margin-bottom: 1px;
+			}
+
+			/* Başlık Stili */
+			.filter-title {
+				font-weight: bold;
+				font-size: 13px;
+				color: #333;
+				display: block;
+				margin-bottom: 1px;
+			}
+
+			/* Checkbox Grupları */
+			.collection-checkboxes {
+				display: flex;
+				flex-direction: column;
+				gap: 2px;
+			}
+
+			/* Özel Checkbox Stili */
+			.custom-checkbox {
+				display: flex;
+				align-items: center;
+				cursor: pointer;
+				position: relative;
+				padding-left: 20px;
+				font-size: 10px;
+				color: #333;
+			}
+
+			/* Varsayılan Checkbox Gizleme */
+			.custom-checkbox input {
+				position: absolute;
+				opacity: 0;
+				cursor: pointer;
+			}
+
+			/* Özel Checkmark */
+			.custom-checkbox .checkmark {
+				position: absolute;
+				left: 0;
+				top: 2px;
+				height: 12px;
+				width: 12px;
+				background-color: #ddd;
+				border-radius: 2px;
+				transition: background 0.2s;
+			}
+
+			/* Checkbox Seçili Olduğunda */
+			.custom-checkbox input:checked ~ .checkmark {
+				background-color: #28a745; /* Yeşil */
+			}
+
+			/* Checkmark İçindeki İşaret */
+			.custom-checkbox .checkmark:after {
+				content: "";
+				position: absolute;
+				display: none;
+			}
+
+			/* Checkbox Seçili Olduğunda İç İşaretin Gösterilmesi */
+			.custom-checkbox input:checked ~ .checkmark:after {
+				display: block;
+			}
+
+			/* Checkmark İçindeki İşaretin Stili */
+			.custom-checkbox .checkmark:after {
+				left: 6px;
+				top: 2px;
+				width: 4px;
+				height: 8px;
+				border: solid white;
+				border-width: 0 2px 2px 0;
+				transform: rotate(45deg);
+			}
+
+			/* Label Metni */
+			.label-text {
+				margin-left: 6px;
+				font-size: 12px;
+			}
+
+
+			.custom-checkbox input:checked + .checkmark {
+				background: #007bff;
+				border-color: #007bff;
+			}
+
+			.custom-checkbox input:checked + .checkmark::after {
+				content: "";
+				position: absolute;
+				left: 4px;
+				top: 1px;
+				width: 5px;
+				height: 9px;
+				border: solid white;
+				border-width: 0 2px 2px 0;
+				transform: rotate(45deg);
+			}
+
+			.custom-checkbox:hover {
+				color: #007bff;
+			}
+			
+			/* Filtre konteyneri için özel scrollbar */
+			.filter-container {
+				overflow-y: auto; /* Dikey kaydırmayı aktif et */
+				
+				padding-right: 10px; /* Sağ kenardan kaydırma çubuğu için boşluk bırak */
+			}
+
+			/* WebKit tarayıcılar (Chrome, Edge, Safari) için özel kaydırma çubuğu */
+			.filter-container::-webkit-scrollbar {
+				width: 10px; /* Scroll genişliği */
+				border-radius: 10px;
+			}
+
+			/* Kaydırma çubuğu arka planı */
+			.filter-container::-webkit-scrollbar-track {
+				background: #f1f1f1; /* Açık gri arkaplan */
+				border-radius: 10px;
+			}
+
+			/* Kaydırma çubuğu */
+			.filter-container::-webkit-scrollbar-thumb {
+				background: linear-gradient(45deg, #5a5a5a, #333); /* Şık degrade görünüm */
+				border-radius: 10px;
+				transition: background 0.3s;
+			}
+
+			/* Kaydırma çubuğu hover (üzerine gelince) */
+			.filter-container::-webkit-scrollbar-thumb:hover {
+				background: linear-gradient(45deg, #444, #222);
+			}
+
+
+			/* Butonlar için genel stil */
+			.button-container {
+				display: flex;
+				justify-content: center; /* Ortaya hizalar */
+				gap: 5px; /* Butonlar arasında boşluk bırakır */
+				margin-top: 2px; /* Üstten boşluk ekler */
+			}
+
+			/* Butonların genel tasarımı */
+			.styled-button {
+				padding: 12px 18px;
+				border: none;
+				border-radius: 8px;
+				font-size: 16px;
+				font-weight: bold;
+				cursor: pointer;
+				transition: all 0.3s ease-in-out;
+				display: flex;
+				align-items: center;
+				gap: 8px; /* İkon ile yazı arasındaki boşluk */
+				box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+			}
+
+			/* Farklı buton renkleri */
+			.styled-button.apply {
+				background-color: #4CAF50; /* Yeşil */
+				color: white;
+			}
+
+			.styled-button.clear {
+				background-color: #f44336; /* Kırmızı */
+				color: white;
+			}
+
+			.styled-button.export {
+				background-color: #727476; /*Gri -( Mavi #007bff) */
+				color: white;
+			}
+
+			/* Hover efekti */
+			.styled-button:hover {
+				transform: scale(1.05);
+				opacity: 0.9;
+			}
+
+			/* Buton basıldığında */
+			.styled-button:active {
+				transform: scale(0.98);
+			}
+			/* Butonları daha şık ve kompakt hale getir */
+			.filter-buttons {
+				display: flex;
+				gap: 4px; /* Butonlar arası boşluk */
+				justify-content: center; /* Ortalamak için */
+				flex-wrap: wrap; /* Taşma olursa yeni satıra geçir */
+				/*margin-top: 2px;*/
+			}
+
+			/* Buton Stili */
+			.filter-buttons button {
+				background-color: #444; /* Yumuşak koyu gri */
+				color: #fff; /* Beyaz yazı */
+				border: none;
+				padding: 4px 8px; /* Küçük ve kompakt */
+				font-size: 12px; /* Küçük font */
+				cursor: pointer;
+				border-radius: 4px;
+				transition: all 0.3s ease;
+				min-width: 80px; /* Minimum genişlik */
+				max-width: 120px; /* Maksimum genişlik */
+				text-align: center;
+			}
+
+			/* Hover Efekti */
+			.filter-buttons button:hover {
+				background-color: #666; /* Biraz daha açık gri */
+			}
+
+			/* Aktif butonlar için özel renkler */
+			#applyFilters {
+				background-color: #727476; /* Gri (#31708E Soft mavi) */
+			}
+			#applyFilters:hover {
+				background-color: #285f75;
+			}
+
+			#clearFilters {
+				background-color: #D9534F; /* Soft kırmızı */
+			}
+			#clearFilters:hover {
+				background-color: #b33a36;
+			}
+
+			#exportExcelButton {
+				background-color: #5CB85C; /* Soft yeşil */
+			}
+			#exportExcelButton:hover {
+				background-color: #4a9e4a;
+			}
+			/* Slider Renklendirme */
+			.price-filter input[type="range"] {
+			-webkit-appearance: none;
+			width: 100%;
+			height: 5px;
+			background: #ffffff; /* Beyaz çubuk */
+			border-radius: 5px;
+			outline: none;
+			transition: 0.3s ease-in-out;
+			}
+
+			/* 🔹 Seçili olan kısmı göster */
+			.price-filter input[type="range"]::-webkit-slider-runnable-track {
+				height: 5px;
+				border-radius: 5px;
+			}
+
+			/* 🔹 Kaydırma topu */
+			.price-filter input[type="range"]::-webkit-slider-thumb {
+				-webkit-appearance: none;
+				width: 16px;
+				height: 16px;
+				background: #747576; /* Kaydırma topu rengi */
+				border-radius: 50%;
+				cursor: pointer;
+				margin-top: -5px;
+				position: relative;
+				z-index: 2;
+			}
+
+			/* 🔹 Firefox için */
+			.price-filter input[type="range"]::-moz-range-track {
+				background: #ffffff;
+				height: 6px;
+				border-radius: 5px;
+			}
+
+			.price-filter input[type="range"]::-moz-range-thumb {
+				width: 16px;
+				height: 16px;
+				background: #747576;
+				border-radius: 50%;
+				cursor: pointer;
+			}
+
+			/* 🔹 Edge & IE için */
+			.price-filter input[type="range"]::-ms-track {
+				background: #ffffff;
+				height: 6px;
+				border-radius: 5px;
+			}
+
+			.price-filter input[type="range"]::-ms-fill-lower {
+				background: #747576; /* Seçili alan */
+			}
+
+			.price-filter input[type="range"]::-ms-fill-upper {
+				background: #ffffff;
+			}
+			
+		/* Navbar Sabitleme */
+		.navbar {
+			position: fixed; /* Sayfa ile hareket etmeyen sabit bir konum */
+			top: 0; /* Ekranın en üstünde yer alması için */
+			left: 0; /* Sol kenara hizalanması için */
+			width: 100%; /* Tüm genişliği kaplar */
+			z-index: 1050; /* Diğer içeriklerin üzerinde kalması için yüksek bir z-index */
+			box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Hafif gölge efekti */
+			background-color: #f8f9fa; /* Arka plan rengi */
+			height: 50px; /* Sabit yükseklik */
+			padding: 5px 10px; /* İç boşlukları azaltın */
+			font-size: 0.85rem; /* Genel yazı tipini küçültün */
+			
+		}
+		.suggestionModal {
+		z-index: 1070;
+		}	
+		/* Butonların Boyutunu Küçültme */
+		.navbar .btn {
+			font-size: 0.75rem; /* Buton yazı tipi boyutunu küçült */
+			padding: 5px 10px; /* Buton iç boşluklarını küçült */
+			line-height: 1.2; /* Daha sıkı bir yükseklik */
+			border-radius: 4px; /* Daha küçük köşe yuvarlatma */
+		}
+		.navbar .btn-outline-primary, 
+		.navbar .btn-outline-success {
+			padding: 4px 8px; /* Buton iç boşlukları */
+			font-size: 0.75rem; /* Buton yazı boyutu */
+		}
+
+		/* Modern Buton Stilleri */
+		.nav-link {
+			font-size: 0.9rem;
+			font-weight: 500;
+			transition: background-color 0.3s ease, color 0.3s ease;
+		}
+		.navbar-center {
+			position: absolute;
+			left: 50%;
+			transform: translateX(-50%);
+			top: 0;
+			height: 100%;
+			display: flex;
+			align-items: center;
+			justify-content: center;
+			transition: all 0.3s ease;
+		}
+		
+		/* **Admin Kullanıcı İçin Logo Sekmelere Göre Hizalı** */
+		.navbar-center.admin-active {
+			position: relative;
+			left: auto;
+			transform: none;
+			margin-left: auto;
+			margin-right: auto;
+			display: flex;
+			align-items: center;
+		}
+		.navbar-logo {
+			max-height: 70%; /* Navbar yüksekliğine uyum sağlar */
+			height: 35px; /* İhtiyaca göre sabit bir yükseklik belirleyebilirsiniz */
+			object-fit: contain; /* Oranları korur */
+		}
+
+
+		/* Hover Efektleri */
+		.btn-primary:hover {
+			background-color: #0056b3;
+			color: #fff;
+		}
+
+		.btn-success:hover {
+			background-color: #218838;
+			color: #fff;
+		}
+
+		/* Mobile Görünüm */
+		@media (max-width: 576px) {
+			.nav-link {
+				font-size: 0.8rem;
+			}
+		}
+		.nav-item button {
+			padding: 5px;
+			margin: 0 0px;
+			transition: color 0.3s ease;
+		}
+
+		.nav-item button:hover {
+			color: #0056b3; /* Kullanıcı girişi için hover rengi */
+		}
+
+		.nav-item button:hover .fa-shopping-cart {
+			color: #218838; /* Sepet için hover rengi */
+		}
+		#navbarMessage {
+			font-size: 1rem;
+			font-weight: bold;
+			color: #333;
+			margin-right: 20px;
+		}
+		
+		/* **Sekmelerin Modern Görünümü** */
+		.custom-tabs {
+			display: flex;
+			border-radius: 8px;
+			max-height: 70%;
+		}
+
+		/* **Sekme Linkleri** */
+		.custom-tabs .nav-link {
+			color: #727476;
+			font-weight: bold;
+			padding: 5px 15px;
+			border-radius: 8px;
+			transition: all 0.3s ease;
+		}
+
+		/* **Hover Efekti** */
+		.custom-tabs .nav-link:hover {
+			background: rgba(0, 123, 255, 0.1);
+		}
+
+		/* **Aktif Sekme** */
+		.custom-tabs .nav-link.active {
+			background: #727476;
+			color: white;
+			border-radius: 6px;
+			transition: all 0.3s ease;
+		}
+		
+		/* 📌 Genel Dropdown Menü */
+		.dropdown-menu {
+			position: absolute;
+			top: 100%;
+			left: 0;
+			margin: 0;
+			z-index: 1050;
+			display: none;
+			transform: none !important;
+			background: rgba(255, 255, 255, 0.95); /* Hafif şeffaf beyaz arka plan */
+			box-shadow: 0 8px 16px rgba(0, 0, 0, 0.1); /* Hafif gölge efekti */
+			border-radius: 8px; /* Yuvarlatılmış köşeler */
+			padding: 4px 0; /* İç boşluk */
+			min-width: 200px; /* Minimum genişlik */
+			transition: opacity 0.3s ease-in-out, transform 0.2s ease-in-out; /* Yumuşak geçiş efekti */
+			max-height: 760px; /* 🔹 Maksimum yükseklik belirliyoruz (örneğin 400px) */
+			
+		}
+
+		/* 📌 Alt Menü (Submenu) */
+		.dropdown-submenu {
+			position: relative;
+		}
+
+		/* 🔹 Alt menü içeriği */
+		.dropdown-submenu .dropdown-menu {
+			position: absolute;
+			top: 0;
+			left: 100%;
+			margin-top: -1px;
+			opacity: 0;
+			visibility: hidden;
+			transform: translateX(10px); /* Başlangıçta hafifçe sağda */
+			transition: opacity 0.3s ease-in-out, transform 0.3s ease-in-out;
+			max-height: 560px; /* 🔹 Alt menüler için de maksimum yükseklik */
+			overflow-y: auto;  /* 🔹 Dikey kaydırma eklensin */
+		}
+
+		/* 📌 Hover ile Görünürlük */
+		.dropdown:hover > .dropdown-menu,
+		.dropdown-submenu:hover > .dropdown-menu {
+			display: block;
+			opacity: 1;
+			visibility: visible;
+			transform: translateX(0);
+		}
+
+		/* 📌 Menü İçindeki Öğeler */
+		.dropdown-menu a {
+			display: block;
+			padding: 6px 12px;
+			font-size: 13px;
+			color: #333;
+			text-decoration: none;
+			transition: background 0.3s ease, color 0.3s ease;
+			border-radius: 4px; /* Yuvarlatılmış iç köşeler */
+		}
+
+		/* 🎨 Hover Efekti */
+		.dropdown-menu a:hover {
+			background: #747576; /* Bootstrap'in mavi tonu */
+			color: white;
+		}
+
+		/* 📌 Mobil Görünüm İçin (Menülerin Tam Genişlikte Açılması) */
+		@media (max-width: 768px) {
+			.dropdown-menu {
+				position: static;
+				width: 100%;
+				border-radius: 0;
+				box-shadow: none;
+				background: white;
+				max-height: 300px; /* 🔹 Daha küçük ekranlarda yükseklik azaltıldı */
+			}
+			
+			.dropdown-submenu .dropdown-menu {
+				position: static;
+				width: 100%;
+				transform: none;
+				opacity: 1;
+				visibility: visible;
+				 max-height: 250px;
+			}
+		}
+			
+	.quantity-controls {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		gap: 5px;
+	}
+
+	.quantity-controls button {
+		background-color: white;
+		border: 1px solid #ccc;
+		border-radius: 4px;
+		width: 25px;
+		height: 25px;
+		font-size: 16px;
+		color: #333;
+		cursor: pointer;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		transition: background-color 0.3s ease;
+	}
+
+	.quantity-controls button:hover {
+		background-color: #f0f0f0;
+		border-color: #999;
+	}
+
+	.quantity-controls input {
+		width: 40px;
+		height: 25px;
+		text-align: center;
+		border: 1px solid #ccc;
+		border-radius: 4px;
+		margin: 0;
+	}
+	
+	</style>
+	
+	<style>
+	.cart-modal-header {
+		display: flex;
+		justify-content: space-between;
+		align-items: center;
+		padding: 2px 2px;
+		border-bottom: 1px solid #ddd;
+	}
+
+	.cart-modal-body {
+		padding: 15px;
+	}
+
+	.cart-item {
+		display: flex;
+		align-items: center;
+		justify-content: space-between;
+		border-bottom: 1px solid #f0f0f0;
+		padding: 10px 0;
+	}
+
+	.cart-item img {
+		width: 50px;
+		height: 50px;
+		object-fit: cover;
+		border-radius: 4px;
+		margin-right: 10px;
+	}
+
+	.cart-item-info {
+		flex: 1;
+		margin-left: 10px;
+	}
+
+	.cart-item-info p {
+		margin: 0;
+		font-size: 0.9rem;
+	}
+
+	.cart-item-actions {
+		display: flex;
+		flex-direction: column;
+		align-items: flex-end;
+	}
+
+	.cart-item-actions button {
+		font-size: 0.75rem;
+		margin-bottom: 5px;
+	}
+	
+	
+			#imageModal .modal-dialog {
+				top: 26px;
+				max-width: 90%;
+				height: 82vh;
+				width: 82vh;
+			}
+
+			/* Resimlerin büyüklüğünü koru */
+			#imageModal .modal-body img {
+				max-width: 100%;
+				max-height: 100%;
+				height: auto;
+				width: auto;
+				object-fit: contain;
+			}
+
+			/* Carousel İçin Düzeltmeler */
+			.carousel-inner {
+				position: relative;
+				width: 100%;
+				overflow: hidden;
+			}
+
+			/* Carousel Ok Butonları */
+			#imageModal.carousel-control-prev,
+			#imageModal.carousel-control-next {
+				position: absolute;
+				top: 50%;
+				transform: translateY(-50%);
+				width: 5%;
+				height: auto;
+				opacity:  !important;
+				z-index: 1000;
+				background-color: rgba(255, 255, 255, 0.5); /* Yarı saydam arka plan */
+				border-radius: 100%;
+			}
+
+			.carousel-control-prev-icon {
+				background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23333' viewBox='0 0 8 8'%3E%3Cpath d='M4.5 0L3.5 1 6.5 4 3.5 7 4.5 8l4-4z'/%3E%3C/svg%3E");
+				transform: rotate(180deg);
+			}
+			.carousel-control-next-icon {
+				background-image: url("data:image/svg+xml;charset=utf8,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='%23333' viewBox='0 0 8 8'%3E%3Cpath d='M4.5 0L3.5 1 6.5 4 3.5 7 4.5 8l4-4z'/%3E%3C/svg%3E");
+			}		
+			
+			/* Carousel Noktalarının (İndikatörlerin) Rengini Koyulaştır */
+			.carousel-indicators li {
+				background-color: rgba(100, 100, 100, 0.7); /* Koyu Gri Renk */
+				border: 1px solid rgba(255, 255, 255, 0.5); /* Hafif Beyaz Kenarlık */
+			}
+
+			/* Aktif Nokta Daha Parlak Olsun */
+			.carousel-indicators .active {
+				background-color: rgba(50, 50, 50, 1); /* Daha Koyu Gri */
+			}
+
+			#loadingMessage {
+				position: fixed;
+				top: 0;
+				left: 0;
+				width: 100vw;
+				height: 100vh;
+				background-color: rgba(0, 0, 0, 0.6); /* Gri ve opak arka plan */
+				color: white;
+				display: flex;
+				flex-direction: column;
+				justify-content: center;
+				align-items: center;
+				z-index: 9999; /* Üst katmanda görünür */
+				font-size: 1.5rem; /* Daha büyük yazı */
+				opacity: 0.95; /* Hafif şeffaflık */
+			}
+			#configureModal  {
+			z-index: 1065; /* Üst katmanda görünür */
+			}
+			
+			#compareModal .modal-dialog {
+				max-width: 95%; /* Modal genişliği */
+			}
+
+			#compareProductsContainer {
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: center; /* Ürünleri ortalar */
+				align-items: flex-start;
+				gap: 15px; /* Ürünler arası mesafe */
+				padding: 10px;
+			}
+
+			#compareProductsContainer .compare-product {
+				flex: 1 1 calc(25% - 15px); /* 4 sütun düzeni */
+				max-width: calc(25% - 15px);
+				text-align: center;
+				padding: 10px;
+				transition: all 0.3s ease-in-out;
+			}
+
+			/* 3 Ürün olduğunda her biri %30 genişliğinde olsun ve ortalansın */
+			#compareProductsContainer:has(.compare-product:nth-child(3)) {
+				justify-content: space-around;
+			}
+
+			/* 2 Ürün olduğunda her biri %40 genişliğinde olsun ve ortalansın */
+			#compareProductsContainer:has(.compare-product:nth-child(2)) {
+				justify-content: center;
+			}
+
+			@media (max-width: 992px) {
+				#compareProductsContainer .compare-product {
+					flex: 1 1 calc(50% - 15px); /* Küçük ekranlarda 2 sütun */
+					max-width: calc(50% - 15px);
+				}
+			}
+
+			@media (max-width: 600px) {
+				#compareProductsContainer .compare-product {
+					flex: 1 1 100%; /* Mobilde tek sütun */
+					max-width: 100%;
+				}
+			}
+
+			.compare-checkbox {
+				display: flex;
+				align-items: center;
+				gap: 5px;
+				font-size: 14px;
+			}
+			#compareModal .table-wrapper {
+				max-width: 100%;
+				overflow-x: auto;
+			}
+
+			#compareModal .table {
+				table-layout: fixed;
+				width: 100%;
+			}
+
+			#compareModal .table td {
+				word-wrap: break-word;
+				overflow: hidden;
+				text-overflow: ellipsis;
+				
+			}
+
+			#compareModal .table td.long-text {
+				white-space: normal;
+				word-wrap: break-word;
+				overflow-wrap: break-word;
+			}
+		
+	
+			/* Modal genişliğini artır */
+		.modal-dialog {
+			max-width: 96%; /* Modal genişliğini yüzde 90 yap */
+			width: auto; /* İçeriğe uygun genişlik */
+		}
+		#cartListModal .modal-dialog {
+					//max-width: 90%; /* Modal genişliğini yüzde 60 yap */
+					width: auto; /* İçeriğe uygun genişlik */
+				}
+		#cartFormModal .modal-dialog {
+			max-width: 40%; /* Modal genişliğini yüzde 40 yap */
+			width: auto; /* İçeriğe uygun genişlik */
+		}
+		/* Tablo içerisindeki sütun genişliklerini ayarla */
+		.table th:nth-child(3), /* "Ürün Adı" sütunu */
+		.table td:nth-child(3) {
+			width: 40%; /* Alan genişliğini 40% yap */
+		}
+
+		/* Diğer sütunların genişliğini ayarla */
+		.table th,
+		.table td {
+			white-space: nowrap; /* Taşma durumunda metni sarma */
+			text-overflow: ellipsis; /* Taşan metni üç nokta ile kes */
+			overflow: hidden; /* Taşan kısmı gizle */
+			padding-top: 2px !important;
+			padding-bottom: 2px !important;
+		}
+		.table img {
+		  margin-top: 0 !important;
+		  margin-bottom: 0 !important;
+		}
+		.modal-dialog-slideout {
+			position: fixed;
+			margin: auto;
+			width: 100%;
+			height: 100%;
+			right: 0;
+			top: 0;
+			transform: translateX(100%);
+			transition: transform 0.3s ease-out;
+		}
+
+		.modal.fade .modal-dialog-slideout {
+			transform: translateX(100%);
+		}
+
+		.modal.fade.show .modal-dialog-slideout {
+			transform: translateX(0);
+		}
+		.dropdown-menu {
+			position: absolute;
+			will-change: transform;
+			z-index: 1060; /* Modal'ın diğer elemanlarının üstünde */
+			transform: translate3d(0, -100%, 0); /* Yukarıya taşı */
+		}
+		#cartFormModal {
+			z-index: 1060;
+		}
+
+		.btn-secondary i {
+			margin-right: 5px;
+		}	
+
+		.modal-footer {
+			display: flex;
+			justify-content: flex-end;
+			border-top: 1px solid #ddd;
+			padding: 10px 15px;
+		}
+		#priceUpdateModal {
+		z-index: 1061;
+		}
+		#suggestionModal {
+		z-index: 1061;
+		}
+		/* Barkod Yazdırma */
+		#barcodeLabelsContainer {
+			display: flex;
+				flex-wrap: wrap;
+				justify-content: flex-start;
+				align-content: flex-start;
+				align-items: flex-start;
+				padding-top: 35px;
+				width: calc(100% - 220px); /* 🔥 Filter Container'ı çıkarttık */
+				margin-left: 220px; /* Filter Container genişliği */
+		}
+		.barcode-label {
+		  display: inline-block;
+		  box-sizing: border-box;
+		  padding: 2mm;
+		}
+
+		.large-label {
+		  width: 78mm;
+		  height: 28mm;
+		}
+
+		.small-label {
+		  width: 40mm;
+		  height: 20mm;
+		}
+		@media print {
+		  .barcode-label {
+			page-break-after: always;
+			page-break-inside: avoid;
+		  }
+		  body {
+			margin: 0;
+		  }
+		}
+
+
+</style>
+
+<style>
+			body { font-family: 'Roboto', Arial, sans-serif; }
+			.filter-container {
+				position: fixed; /* Sabit yerleşim */
+				top: 48px; /* Navbar yüksekliği kadar aşağıda başlasın */
+				left: 0; /* Sol kenara hizalansın */
+				height: calc(100% - 35px); /* Ekranın geri kalanını kaplasın */
+				width: 200px; /* Sabit genişlik */
+				display: flex;
+				flex; flex-direction: column;
+				background-color: white; /* Arka plan rengi */
+				z-index: 1000; /* Üst katmanda görüntülensin */
+				box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Hafif gölge efekti */
+				overflow-y: auto; /* İçerik taşarsa kaydırma ekle */
+				padding: 10px; /* İçerik boşluğu */
+				overflow-x: hidden;
+			}
+			
+			/* 📌 Dropdownların yüksekliğini azalt ve yazı boyutunu küçült */
+			.filter-container .selectpicker {
+				height: 24px !important; /* Yüksekliği küçült */
+				font-size: 12px !important; /* Yazı boyutunu küçült */
+				padding: 4px 8px !important; /* İç boşluğu daralt */
+			}
+			
+			/* 📌 Dropdown butonları ve menüler için aynı küçültme işlemi */
+			.bootstrap-select .btn {
+				height: 24px !important;
+				font-size: 12px !important;
+				padding: 4px 8px !important;
+			}
+
+			/* 📌 Dropdown içindeki öğelerin boyutunu küçült */
+			.bootstrap-select .dropdown-menu {
+				font-size: 12px !important;
+			}
+
+			/* 📌 Filter konteyner içinde aşırı boşluğu önlemek için */
+			.filter-container {
+				padding: 4px !important;
+				margin: 2px !important;
+			}
+
+			/* 📌 Yatay taşmayı engelle */
+			.filter-container .dropdown-menu {
+				max-height: 600px; /* Açılır menü yüksekliğini kısıtla */
+				overflow-y: auto; /* Kaydırma çubuğu ekle */
+			}
+			/* 📌 Dropdown Menünün Üste Açılması */
+			.selectpicker.dropdown-menu {
+				max-width: 220px; /* 📌 Konteynerin genişliği kadar sınırla */
+				overflow-x: hidden; /* 📌 Yatay kaydırmayı engelle */
+				position: absolute !important;
+				bottom: 100%; /* 📌 Üste açılmasını sağla */
+				left: 0;
+				z-index: 1051; /* 📌 Önde olmasını sağla */
+				transform: translateY(-5px); /* 📌 Hafif yukarı kaydır */
+				
+			}
+
+			/* 📌 Seçeneklerin Taşmasını Önle */
+			.selectpicker .dropdown-menu li {
+				white-space: nowrap; /* 📌 Uzun metinleri kaydırma yerine daralt */
+				overflow: hidden;
+				text-overflow: ellipsis; /* 📌 Uzun metinler üç nokta ile gösterilsin */
+				
+			}
+
+			/* 📌 Mobil için dropdownları tam ekran genişlikte aç */
+			@media (max-width: 768px) {
+				.selectpicker.dropdown-menu {
+					max-width: 100%;
+					width: 100%;
+					left: 0;
+					right: 0;
+				}
+			}
+
+
+			.filter { margin: 2px 0; }
+			.toolbar {
+				display: flex; flex-direction: column; align-items: flex-start; margin-top: auto;
+			}
+			.toolbar button { margin: 3px 0; padding: 5px 8px; border: none; background-color: #ddd; cursor: pointer; }
+			
+			.navbar .btn.nav-link.active i {
+				color: #0056b3;
+				font-weight: bold;
+			}
+			#concept-products-container {
+				display: flex;
+				flex-wrap: wrap;
+				justify-content: flex-start;
+				align-content: flex-start;
+				align-items: flex-start;
+				padding-top: 35px;
+				width: calc(100% - 220px); /* 🔥 Filter Container'ı çıkarttık */
+				margin-left: 220px; /* Filter Container genişliği */
+				margin-top: 40px;
+			}
+
+			/* Ürünlerin genişliğini filter-container'ı dikkate alarak hesapla */
+			#concept-products-container .product {
+				flex: 0 1 calc((100% - 220px) / 4);
+				max-width: calc((100% - 220px) / 4);
+				margin: 10px;
+				box-sizing: border-box;
+			}
+
+			/* 3 Sütun Görünüm (1280px ve altında) */
+			@media screen and (max-width: 1280px) {
+				#concept-products-container .product {
+					flex: 0 1 calc((100% - 220px) / 3);
+					max-width: calc((100% - 220px) / 3);
+				}
+			}
+
+			/* 2 Sütun Görünüm (1024px ve altında) */
+			@media screen and (max-width: 1024px) {
+				#concept-products-container .product {
+					flex: 0 1 calc((100% - 220px) / 2);
+					max-width: calc((100% - 220px) / 2);
+				}
+			}
+
+			/* 1 Sütun Görünüm (Mobil) */
+			@media screen and (max-width: 768px) {
+				#concept-products-container .product {
+					flex: 0 1 100%;
+					max-width: 100%;
+				}
+			}
+
+			/* Satırın tamamlanmasını sağla */
+			#concept-products-container::after {
+				content: "";
+				flex: 0 1 calc((100% - 220px) / 4 );
+				max-width: calc((100% - 220px) / 4);
+			}
+
+			/* Placeholder ürünler */
+			.product-placeholder {
+				flex: 0 1 calc((100% - 220px) / 4 );
+				max-width: calc((100% - 220px) / 4 );
+				height: 100px;
+				margin: 10px;
+				visibility: hidden;
+			}
+
+			.product-container {
+				display: flex; 
+				flex-wrap: wrap; 
+				align-items: start; 
+				align-content: start;
+				margin-left: 220px; 
+				padding-top: 35px;
+			}
+			
+			/* 📌 Konsept Banner Alanı */
+			.concept-banner {
+				display: flex;
+				flex-direction: column;
+				align-items: center; /* Yatay olarak ortala */
+				text-align: center;
+				margin: 20px auto; /* Üstten biraz boşluk bırak ve ortala */
+				padding: 10px;
+				max-width: 80%; /* Bannerın genişliğini sınırla */
+			}
+
+			/* 📌 Banner Resmi */
+			.concept-banner-image {
+				max-width: 100%; /* Sayfanın genişliğine uyum sağla */
+				height: auto;
+				border-radius: 8px; /* Hafif köşe yuvarlatma */
+				box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1); /* Hafif gölge efekti */
+			}
+
+			/* 📌 Konsept Başlığı */
+			.concept-title {
+				font-size: 36px;
+				font-weight: bold;
+				color: #727476;
+				margin-top: 10px; /* Banner ile başlık arasına boşluk ekle */
+			}
+
+			/* 📌 Navbar ile banner arasında biraz boşluk bırak */
+			.navbar + .concept-banner {
+				margin-top: 20px;
+			}
+
+			.group-title {
+				width: 100%; margin: 1%; padding: 10px; background-color: #f0f0f0;
+				font-weight: bold; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+			}
+			.product {
+				flex: 1 1 calc(100% / var(--column-count) - 20px); /* Grid sistemi ayarları */
+				margin: 8px;
+				padding: 8px; /* İçeriğin kenar boşluğu */			
+				font-size: 12px; /* Genel yazı boyutu */
+				line-height: 1.4; /* Daha kompakt satır yüksekliği */
+				border-radius: 8px; /* Köşeleri yuvarlat */
+				box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); /* Hafif gölge */
+				background-color: #f9f9f9; /* Hafif arka plan rengi */
+			}
+			.product img {
+				border-radius: 4px; /* Görsellerin köşelerini yuvarlat */
+				width: 100%; height: auto; object-fit: cover; aspect-ratio: 1 / 1; cursor: pointer;
+			}
+			.product, table th, table td {
+				font-family: 'Roboto', Arial, sans-serif;
+			}
+			.product textarea { width: 90%; height: 50px; margin-top: 10px; }
+			.koleksiyon-checkboxes {
+				display: flex; justify-content: center; gap: 10px; margin-top: 10px;
+			}
+			@media screen and (max-width: 1280px) { .product { flex: 1 1 calc(100% / 4); } }
+			@media screen and (max-width: 1024px) { .product { flex: 1 1 calc(100% / 3); } }
+			@media screen and (max-width: 768px) { .product { flex: 1 1 calc(100% / 2); } }
+			@media screen and (max-width: 480px) { .product { flex: 1 1 100%; } }
+			.product-container::after { content: ""; flex: 1 1 calc(100% / 4); }
+			.modal-body img {
+				max-height: 80vh; width: auto; aspect-ratio: 1 / 1; object-fit: cover;
+			}
+			
+			.product-placeholder {
+				flex: 1 1 calc(100% / var(--column-count) - 20px); /* Sütun genişliği */
+				margin: 10px;
+				box-sizing: border-box;
+				visibility: hidden; /* Görünmez yapar */
+				height: auto; /* Yüksekliği otomatik yap */
+				background-color: lightgray; /* Görsel olarak test etmek için */
+			}
+
+			.product-placeholder {
+				background-color: rgba(255, 0, 0, 0.2); /* Kırmızı arka plan */
+				border: 1px dashed red; /* Çizgili kenarlık */
+				flex: 1 1 calc(100% / var(--column-count) - 20px);
+				height: 100px; /* Placeholder yüksekliği */
+				margin: 10px;
+			}
+			
+			table {
+				width: 100%;
+				border-collapse: collapse;
+				margin-top: 10px;
+			}
+
+			table th, table td {
+				border: 1px solid #ddd;
+				padding: 4px; /* Daha az boşluk */
+				line-height: 1.2; /* Daha dar satır yüksekliği */
+			}
+
+			table tr:nth-child(even) {
+				background-color: #f9f9f9;
+			}
+
+			table tr:hover {
+				background-color: #f1f1f1;
+			}
+
+			table th {
+				/* background-color: #727476; */
+				color: #333
+				font-size: 12px; /* Başlık yazı boyutu */;
+				text-align: left;
+			}
+
+			.koleksiyon-checkboxes label {
+				display: inline-block;
+				margin-right: 10px;
+			}
+
+			textarea {
+				border: 1px solid #ccc;
+				padding: 5px;
+				border-radius: 5px;
+				width: calc(100% - 10px);
+				resize: none;
+			}
+			.table-warning {
+				background-color: #fff3cd !important; /* Bootstrap'in warning rengini kullanır */
+			}
+			.customized-row {
+				background-color: #d8d1b1 !important; /* Satır renk */
+			}
+
+		/* 📌 Filtre konteynerini dikkate alarak rapor sekmesini kaydır */
+		#reports {
+			margin-top: 20px;
+			margin-left: 200px; /* 📌 Filtre konteyneri 200px genişliğinde olduğu için sola boşluk bırak */
+			width: calc(100% - 200px); /* 📌 Geri kalan alanı kullan */
+			padding: 50px;
+		}
+
+		/* 📊 Grafiklerin bulunduğu tablo */
+		.charts-table {
+			width: 100%;
+			border-collapse: separate;
+			border-spacing: 20px; /* 📌 İki grafik arasına 20px boşluk ekle */
+			margin-top: 20px;
+		}
+
+		/* 📊 Grafik hücreleri */
+		.charts-table td {
+			width: 50%; /* 📌 Grafikler eşit genişlikte olacak */
+			text-align: center;
+			padding: 15px; /* 📌 Grafik hücrelerine iç padding ekleyelim */
+			vertical-align: top;
+		}
+
+		/* 📈 Grafiklerin içeriğini modernleştirme */
+		canvas {
+			width: 100% !important;
+			height: 400px !important;
+			background: #ffffff;
+			border-radius: 10px; /* 📌 Köşeleri yuvarlat */
+			box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1); /* 📌 Hafif gölge efekti */
+			padding: 15px;
+		}
+
+		/* 📌 Başlıkları ortala ve modern görünüm ekle */
+		.charts-table h4 {
+			text-align: center;
+			font-size: 18px;
+			font-weight: bold;
+			color: #333;
+			margin-bottom: 10px;
+		}
+		/* 📌 Özet tablo tasarımı */
+		/* 📌 3 sütunlu yapıyı oluştur */
+		.summary-container {
+			width: 100%;
+			margin-top: 20px;
+			border-collapse: collapse;
+		}
+
+		/* 📌 Ortadaki sütunu hizala */
+		.summary-wrapper {
+			width: 25%;
+			margin: auto;
+			text-align: center;
+		}
+		/* 📌 Ortadaki sütunu hizala */
+		.topsummary-wrapper {
+			width: 75%;
+			margin: auto;
+			text-align: center;
+		}
+
+		/* 📌 Özet tablo tasarımı */
+		.summary-table {
+			width: 100%;
+			border-collapse: collapse;
+			background: #fff;
+			border-radius: 8px;
+			box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+			font-size: 14px;
+		}
+
+		/* 📌 Başlık satırı */
+		.summary-table > thead {
+			background-color: #727476 !important; 
+			color: white !important;
+			font-size: 14px !important;
+			font-weight: bold !important;
+		}
+		
+		/* 📌 Hover efekti */
+		.summary-table thead tr:hover {
+			background-color: #727483;
+		}
+		
+		/* 📌 Hücre içeriği */
+		.summary-table th, .summary-table td {
+			padding: 6px;
+			border-bottom: 1px solid #ddd;
+			text-align: center;
+		}
+		/* 📌 GÜN sütununu sola hizala */
+		.summary-table td:first-child, 
+		.summary-table th:first-child {
+			text-align: left !important; /* 📌 Sola hizala */
+			padding-left: 12px; /* 📌 Hafif iç boşluk ekleyerek daha güzel görünmesini sağla */
+		}
+		
+		/* 📌 SİPARİŞ ve TEKLİF sütunlarını sağa hizala */
+		.summary-table td:nth-child(2),
+		.summary-table td:nth-child(3),
+		.summary-table th:nth-child(2),
+		.summary-table th:nth-child(3) {
+			text-align: right !important; /* 📌 Sağa hizala */
+			padding-right: 12px; /* 📌 Hafif iç boşluk ekleyerek daha düzenli görünüm */
+		}
+		/* 📌 SİPARİŞ ve TEKLİF sütunlarını sağa hizala */
+		.summary-table td:nth-child(1),
+		.summary-table td:nth-child(1),
+		
+			text-align: left !important; /* 📌 Sola hizala */
+			padding-right: 12px; /* 📌 Hafif iç boşluk ekleyerek daha düzenli görünüm */
+		}
+		/* 📌 Alternatif arka plan rengi */
+		.summary-table tbody tr:nth-child(even) {
+			background-color: #f9f9f9;
+		}
+
+		/* 📌 Hover efekti */
+		.summary-table tbody tr:hover {
+			background-color: #727478;
+		}
+
+		/* 📌 Alt toplam satırı */
+		.summary-table > tfoot {
+			background-color: #727476 !important; 
+			color: white !important;
+			font-weight: bold !important;
+		}
+		/* 📌 Hover efekti */
+		.summary-table tfoot tr:hover {
+			background-color: #727483;
+		}
+		/* 📌 Özet tablo tasarımı */
+		.montlysummary-table {
+			margin-left: 320px;
+			width: 60%;
+			border-collapse: collapse;
+			background: #fff;
+			border-radius: 8px;
+			box-shadow: 0px 2px 6px rgba(0, 0, 0, 0.1);
+			font-size: 14px;
+		}
+
+		/* 📌 Başlık satırı */
+		.montlysummary-table > thead {
+			background-color: #727476 !important; 
+			color: white !important;
+			font-size: 14px !important;
+			font-weight: bold !important;
+			text-align: left !important; /* 📌 Sola hizala */
+		}
+		
+		/* 📌 Hover efekti */
+		.montlysummary-table thead tr:hover {
+			background-color: #727483;
+		}
+		
+		/* 📌 Hücre içeriği */
+		.montlysummary-table th, .montlysummary-table td {
+			padding: 6px;
+			border-bottom: 1px solid #ddd;
+			text-align: center;
+		}
+		/* 📌 ilk sütununu sola hizala */
+		.montlysummary-table td:first-child, 
+		.montlysummary-table th:first-child {
+			text-align: left !important; /* 📌 Sola hizala */
+			padding-left: 12px; /* 📌 Hafif iç boşluk ekleyerek daha güzel görünmesini sağla */
+		}
+		
+		/* 📌 SİPARİŞ ve TEKLİF sütunlarını sağa hizala */
+		.montlysummary-table td:nth-child(7),
+		.montlysummary-table th:nth-child(7),
+		.montlysummary-table td:nth-child(6),
+		.montlysummary-table th:nth-child(6),
+		.montlysummary-table td:nth-child(5),
+		.montlysummary-table th:nth-child(5),
+		.montlysummary-table td:nth-child(4),
+		.montlysummary-table th:nth-child(4),
+		.montlysummary-table td:nth-child(3),
+		.montlysummary-table th:nth-child(3) {
+			text-align: right !important; /* 📌 Sağa hizala */
+			padding-right: 12px; /* 📌 Hafif iç boşluk ekleyerek daha düzenli görünüm */
+		}
+		.montlysummary-table td:nth-child(1),
+		.montlysummary-table th:nth-child(1),
+		.montlysummary-table td:nth-child(2),
+		.montlysummary-table th:nth-child(2)
+		
+			text-align: left !important; /* 📌 Sola hizala */
+			padding-right: 12px; /* 📌 Hafif iç boşluk ekleyerek daha düzenli görünüm */
+		}
+		/* 📌 Alternatif arka plan rengi */
+		.montlysummary-table tbody tr:nth-child(even) {
+			background-color: #f9f9f9;
+		}
+
+		/* 📌 Hover efekti */
+		.montlysummary-table tbody tr:hover {
+			background-color: #727478;
+		}
+
+		/* 📌 Alt toplam satırı */
+		.montlysummary-table > tfoot {
+			background-color: #727476 !important; 
+			color: white !important;
+			font-weight: bold !important;
+		}
+		/* 📌 Hover efekti */
+		.montlysummary-table tfoot tr:hover {
+			background-color: #727483;
+		}
+		/* 📌 Grup başlığı yapısını düzenleyelim */
+		.group-title {
+			display: flex;
+			justify-content: space-between; /* Grup ismi solda, buton sağda kalacak */
+			align-items: center;
+			width: 99%; /* Grup başlığı tam genişlikte olacak */
+			min-width: 99%; /* İçerik değiştiğinde genişliği koruyacak */
+			flex-wrap: nowrap; /* Elemanların alt satıra geçmesini önle */
+			padding: 10px 15px;
+			background-color: #f5f5f5;
+			border: 1px solid #ddd;
+			font-weight: bold;
+			color: #333;
+			box-sizing: border-box; /* Padding ve border genişliği hesaba kat */
+		}
+
+		/* 📌 Butonu sağa sabitle */
+		.group-title button {
+			background-color: #727476;
+			color: white;
+			border: none;
+			padding: 5px 10px;
+			font-size: 14px;
+			cursor: pointer;
+			border-radius: 5px;
+			margin-left: auto; /* Butonun sağda sabit kalmasını sağlar */
+		}
+
+		.group-title button:hover {
+			background-color: #727492;
+		}
+		.concept-banner {
+			text-align: center;
+			margin-bottom: 15px;
+		}
+
+		.concept-banner img {
+			max-width: 100%;
+			height: auto;
+			border-radius: 8px;
+			box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+		}
+
+		.banner-thumbnail {
+			width: 100px;
+			height: 100px;
+			margin: 10px;
+			object-fit: cover;
+			cursor: pointer;
+			border-radius: 8px;
+			transition: transform 0.2s;
+		}
+
+		.banner-thumbnail:hover {
+			transform: scale(1.1);
+		}
+		.cart-items-container {
+			display: flex;
+			flex-direction: column;
+			gap: 10px;
+		}
+
+		.cart-item {
+			display: flex;
+			align-items: center;
+			justify-content: space-between;
+			padding: 10px;
+			border: 1px solid #ddd;
+			border-radius: 4px;
+			background-color: #f9f9f9;
+			font-size: 0.9rem;
+		}
+
+		.cart-item span {
+			margin-right: 15px; /* Bilgiler arasında boşluk bırak */
+			white-space: nowrap; /* Satır kaymasını önle */
+		}
+
+		.cart-item img {
+			width: 50px;
+			height: 50px;
+			object-fit: cover;
+			border-radius: 4px;
+			margin-right: 10px;
+		}
+		/* Hoş Geldiniz Modal için Özelleştirilmiş Stil */
+		.welcome-modal {
+			max-width: 20%; /* Ekranın %30'u */
+			width: 100%; /* Daha küçük ekranlarda tam genişlik */
+			margin: auto; /* Ortalanmış */
+			top: 20%; /* Ekranın üstünden %20 boşluk */
+		}
+
+		.welcome-modal .modal-content {
+			text-align: center; /* İçerik ortalanır */
+			padding: 20px;
+		}
+		/* Sepet Modalı Üst Boşluk */
+		#cartModal .modal-dialog {
+		  margin-top: 55px;
+		}
+		#barcodeContainer {
+			margin-top: 40px; /* Navbar yüksekliği kadar boşluk ekledik */
+		}
+		/* konsept etiketi dropdown yazı tipi boyutu */
+		/* Orijinal select ve option öğeleri için */
+		#conceptLabelDropdown,
+		#conceptLabelDropdown option {
+		  font-size: 12px; /* İstediğiniz boyuta göre ayarlayın */
+		}
+
+		/* Bootstrap Select'in oluşturduğu dropdown menüsü için */
+		.bootstrap-select .dropdown-menu li a {
+		  font-size: 12px; /* İstediğiniz boyuta göre ayarlayın */
+		}
+		/* Konsept etiketi yazdırma/etiket oluşturma kuralları */
+		@media print {
+		  .print-header {
+			position: fixed;
+			top: 5mm;
+			left: 5mm;
+			right: 5mm;
+		  }
+		  .print-footer {
+			position: fixed;
+			bottom: 5mm;
+			left: 5mm;
+			right: 5mm;
+		  }
+		  .print-page {
+			page-break-after: always;
+			/* İçeriğin üst ve alt kısımdan çakışmaması için yeterli boşluk bırakın */
+			margin-top: 40mm;  /* Başlık yüksekliğine göre ayarlanmalı */
+			margin-bottom: 20mm;  /* Alt bilgi yüksekliğine göre ayarlanmalı */
+		  }
+		}
+
+
+		</style>
+		<style>
+		  /* Sabit tablo başlığı */
+		  #stokKartiTable thead th {
+			position: sticky;
+			top: 0;
+			background: #f8f9fa;
+			z-index: 2;
+		  }
+		  /* İlk sütun (KOD) sabit */
+		  #stokKartiTable td:first-child, #stokKartiTable th:first-child {
+			position: sticky;
+			left: 0;
+			background: #f8f9fa;
+			z-index: 3;
+		  }
+		  /* İkinci sütun (ADI) sabit; left değeri ilk sütunun genişliğine göre ayarlanmalı (örneğin 100px) */
+		  #stokKartiTable td:nth-child(2), #stokKartiTable th:nth-child(2) {
+			position: sticky;
+			left: 100px; /* İlk sütunun genişliğine göre ayarlayın */
+			background: #f8f9fa;
+			z-index: 3;
+			min-width: 15%;
+		  }
+		  /* Grid konteyneri */
+		#hotContainer {
+		  width: 97%;
+		  height: 100%;
+		  overflow: visible; /* Değiştirildi */
+		  position: relative;
+		  margin-top: 10px;
+		  margin-left: 10%;
+		}
+		#stokKartiContainer {
+		  display: none;
+		  text-align: center;
+		  margin-left: 2%;
+		  font-size: 24px;
+		  margin-top: 20px;
+		  
+		  width: 90%;
+		}
+		
+		.bootstrap-select .dropdown-menu {
+			z-index: 9999;
+		}
+
+		/* Popup stilini belirleyelim */
+	  .kod-popup {
+		display: none;
+		position: absolute;
+		background-color: #fff;
+		border: 1px solid #ccc;
+		padding: 8px;
+		box-shadow: 2px 2px 6px rgba(0,0,0,0.2);
+		z-index: 1000;
+		font-size: 12px;
+		max-width: 250px;
+	  }
+		.campaign-badge {
+		  font-weight: bold;
+		  /* Örneğin; etiketin üzerine bir gölge, yuvarlak köşeler vb. */
+		  box-shadow: 0px 1px 3px rgba(0,0,0,0.3);
+		}
+		#campaignPanel {
+			margin-top: 50px;
+			
+		}
+		
+		 /* Seçilen ürünlerin listelendiği tablonun küçük resim ayarları */
+		#campaignPanel .product-thumb {
+		  width: 30px;
+		  height: 30px;
+		  border-radius: 3px;
+		  margin-right: 5px;
+		}
+		/* Option içeriği için selectpicker'da data-content kullanımı (HTML içeren seçenek) */
+		#campaignPanel .bootstrap-select .dropdown-menu li a .option-content {
+		  display: inline-flex;
+		  align-items: center;
+		}
+		
+		/* Menü her zaman aşağı doğru açılsın (JS’in ayarladığı bottom’u iptal ediyoruz) */
+		.tabulator-menu {
+		  bottom: auto !important;
+		}
+
+		/* Maksimum 150px yükseklik, taştığında dikey scroll */
+		.tabulator-menu {
+		  max-height: 150px !important;
+		  overflow-y: auto !important;
+		}
+		 /* Rapor konteyneriniz zaten overflow-y: auto; */
+		  #stockReportContainer table { width:100%; border-collapse:collapse; }
+		  #stockReportContainer thead th {
+			position: sticky;
+			top: -2px;           /* işte burayı padding kadar kaydırdık */
+			background: #fff;
+			z-index: 2;
+		  }
+
+		  /* Opsiyonel: tablo gövdesi satırlarına alt çizgi eklemek isterseniz */
+		  #stockReportContainer tbody tr {
+			border-bottom: 1px solid #ddd;
+		  }
+		  
+		  .etiket-img {
+			  position: absolute;
+			  top: 8px;
+			  left: 8px;
+			  background: rgba(255, 0, 0, 0.8);
+			  color: white;
+			  font-size: 10px;
+			  padding: 2px 4px;
+			  border-radius: 3px;
+			  font-weight: bold;
+			  z-index: 10;
+			}
+
+
+		</style>
+		
